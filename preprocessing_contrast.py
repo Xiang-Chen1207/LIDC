@@ -12,9 +12,9 @@ from tqdm import tqdm
 # ================= 配置区域 =================
 DATA_DIR = "/home/chenx/code/medical_project/data/LIDC-IDRI-slices"
 IMAGE_SIZE = (128, 128) 
-SAVE_RESULT_DIR = "./output_comparison_results"
+SAVE_RESULT_DIR = "/home/chenx/code/medical_project/pre_contrast"
 CSV_OUTPUT = "./method_comparison.csv"
-TEST_SAMPLE_COUNT = 100  # 测试前100张图
+TEST_SAMPLE_COUNT = 1000  # 测试前100张图
 # ===========================================
 
 class LIDC_ComparisonProcessor:
@@ -655,14 +655,14 @@ if __name__ == "__main__":
     method_cols = [col for col in df.columns if col.startswith('C')]
     df['avg_dice'] = df[method_cols].mean(axis=1)
     
-    medium_samples = df[(df['avg_dice'] > 0.3) & (df['avg_dice'] < 0.7)]
+    medium_samples = df[(df['avg_dice'] > 0.7) & (df['avg_dice'] < 0.9)]
     
     if len(medium_samples) > 0:
         best_idx = (medium_samples['avg_dice'] - 0.5).abs().idxmin()
         selected_sample = samples[best_idx]
         print(f"\n选择样本 {selected_sample['id']} 进行详细展示 (平均Dice={df.loc[best_idx, 'avg_dice']:.3f})")
     else:
-        selected_sample = samples[0]
+        selected_sample = samples[10]
         print(f"\n选择第一个样本进行详细展示")
     
     # 3. 可视化详细对比
